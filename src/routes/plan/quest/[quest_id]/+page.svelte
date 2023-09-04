@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { questStore } from '$lib/stores';
 	import QuestInfoBox from './_components/quest-info-box.svelte';
 	import QuestItinerary from './_components/quest-itinerary.svelte';
 	export let data;
@@ -7,15 +8,15 @@
 
 <div class="page">
 	<div class="left">
-		<h1>test</h1>
+		<br />
 	</div>
 	<div class="right">
 		<div class="itinerary-container">
-			<h2>Your Trip to {quest?.country}</h2>
+			<h2>Your Trip to {$questStore?.country}</h2>
 			{#if quest}
-				<QuestInfoBox {quest} />
+				<QuestInfoBox quest={$questStore} />
 			{/if}
-			<QuestItinerary {quest} />
+			<QuestItinerary quest={$questStore} />
 		</div>
 	</div>
 </div>

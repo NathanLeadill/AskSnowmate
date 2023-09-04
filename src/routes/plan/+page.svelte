@@ -3,6 +3,7 @@
 	import FaCalendarAlt from 'svelte-icons/fa/FaCalendarAlt.svelte';
 	import Swal from 'sweetalert2';
 	import { goto } from '$app/navigation';
+	import { questStore } from '$lib/stores';
 
 	let destination = '';
 
@@ -13,6 +14,13 @@
 
 	function findQuest() {
 		console.log('Find Quest');
+		const dest = destination.split(',');
+		// City coming soon
+		console.log('Destination', dest, destination);
+		questStore.update((store) => {
+			store.country = dest[0];
+			return store;
+		});
 		createOptions();
 	}
 
