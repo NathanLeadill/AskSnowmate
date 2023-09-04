@@ -7,11 +7,11 @@
 			<img src="/images/logo.png" alt="Logo" />
 		</a>
 		<nav class="items">
-			<a class="item dim" href="#home">
+			<a class="item dim" href="/">
 				<span>Home</span>
 			</a>
-			<a class="item dim" href="#about">
-				<span>About</span>
+			<a class="item dim" href="/login">
+				<span>Login</span>
 			</a>
 			<a class="item dim" href="/plan">
 				<span>Plan</span>
