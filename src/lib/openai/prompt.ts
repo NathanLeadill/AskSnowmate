@@ -1,11 +1,10 @@
 import { Configuration, OpenAIApi } from 'openai';
-
-const apiKeys = ['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'];
+import { PUBLIC_OPENAI_API_KEY } from '$env/static/public';
 
 function createOpenAIConfiguration() {
 	const configuration = new Configuration({
 		organization: 'org-xCLPnAZdhBauG0ecnIbHm7vF',
-		apiKey: apiKeys[0]
+		apiKey: PUBLIC_OPENAI_API_KEY
 	});
 	const openai = new OpenAIApi(configuration);
 	return openai;

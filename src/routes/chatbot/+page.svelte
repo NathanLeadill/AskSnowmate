@@ -1,10 +1,12 @@
 <!-- Create basic svelte file -->
 <script lang="ts">
+	import { PUBLIC_OPENAI_API_KEY } from '$env/static/public';
+
 	import { conversationStore } from '$lib/stores';
 	import { Configuration, OpenAIApi } from 'openai';
 
 	const configuration = new Configuration({
-		apiKey: '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'
+		apiKey: PUBLIC_OPENAI_API_KEY
 	});
 	const openai = new OpenAIApi(configuration);
 	let message = '';

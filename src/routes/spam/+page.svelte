@@ -1,12 +1,11 @@
 <script lang="ts">
 	import { Configuration, OpenAIApi } from 'openai';
-
-	const apiKeys = ['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'];
+	import { PUBLIC_OPENAI_API_KEY } from '$env/static/public';
 
 	function createOpenAIConfiguration(count: number) {
 		const configuration = new Configuration({
 			organization: 'org-xCLPnAZdhBauG0ecnIbHm7vF',
-			apiKey: apiKeys[count]
+			apiKey: PUBLIC_OPENAI_API_KEY
 		});
 		const openai = new OpenAIApi(configuration);
 		return openai;
