@@ -68,35 +68,7 @@
 	.dim:hover {
 		color: hsla(100, 45%, 6%, 0.5);
 	}
-	.dropdown {
-		position: relative;
-		display: inline-block;
-	}
-	.dropdown-content {
-		display: none;
-		position: absolute;
-		background-color: #f9f9f9;
-		min-width: 160px;
-		box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-		z-index: 1;
-	}
-	.downdown-button {
-		background-color: #04aa6d;
-		color: white;
-		padding: 16px;
-		font-size: 16px;
-		border: none;
-		cursor: pointer;
-	}
-	.dropdown-content a:hover {
-		background-color: #ddd;
-	}
-	.dropdown:hover .dropdown-content {
-		display: block;
-	}
-	.dropdown:hover .downdown-button {
-		background-color: #3e8e41;
-	}
+
 	@media (max-width: 768px) {
 		.brand {
 			flex-direction: column;
