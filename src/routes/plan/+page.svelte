@@ -34,19 +34,24 @@
 			hideClass: { backdrop: 'swal2-noanimation' }
 		});
 
-		await Queue.fire({
+		const { value: lengthOfStay } = await Queue.fire({
 			title: 'How many nights is your quest going to last',
 			inputLabel: 'Please select the number of nights you wish to travel for',
 			currentProgressStep: 0,
 			input: 'range',
-			inputValue: 15,
+			inputValue: 4,
 			inputAttributes: {
 				min: '1',
-				max: '30',
+				max: '9',
 				step: '1'
 			},
 			showClass: { backdrop: 'swal2-noanimation' }
 		});
+		questStore.update((store) => {
+			store.lengthOfStay = lengthOfStay;
+			return store;
+		});
+
 		await Queue.fire({
 			title: 'How many people are going on this quest',
 			text: 'Please select the number of people you wish to travel with',
@@ -68,6 +73,8 @@
 				});
 			}
 		});
+		console.log('QUEST', $questStore);
+
 		await Queue.fire({
 			title: 'What is your budget for this quest',
 			text: 'Please enter the amount in GBP you wish to spend on this quest',
@@ -87,12 +94,22 @@
 	}
 
 	function panelClose(key) {
-		if (key.key === 'Escape') {
-			panel = false;
-		}
+		panel = false;
 	}
 
 	$: console.log(departureDate, 'DEPARURE DATE');
+
+	$: if (departureDate < returnDate) {
+		console.log('Departure date is before return date');
+	} else {
+		questStore.update((store) => {
+			store.returnDate = returnDate;
+			store.departureDate = departureDate;
+			return store;
+		});
+	}
+
+	$: console.log('QUEST STORE', $questStore);
 </script>
 
 <div class="travel-container">
@@ -142,10 +159,12 @@
 			</div>
 		</div>
 	</div>
+	<!-- MOVE TO COMPONENT NATHAN -->
 	<div class="panel" class:active={panel}>
 		<!-- {departureDate} -->
 
 		<div class="panel-content">
+			<button on:click={panelClose} class="close-button">Close panel</button>
 			<p>There will be an infinite sliding calendar here when i can be bothered to make it :)</p>
 
 			<p>Departure</p>

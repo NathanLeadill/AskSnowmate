@@ -7,10 +7,10 @@
 	let itinerary: string[] = [];
 
 	async function fetchItinerary() {
-		console.log('TEST');
+		console.log('TEST', quest);
 
 		const itineraryRequest = await makeOpenAIRequest(
-			`Plan me a 3 day itinerary for a journey to ${quest.country}. This journey is for ${quest.groupSize} people, we want to stay in a ${quest.accommodation.minimumQuality}* or better ${quest.accommodation.type}. Separate each day with a double new line.`
+			`Plan me a ${quest.lengthOfStay} day itinerary for a journey to ${quest.country}. This journey is for ${quest.groupSize} people, we want to stay in a ${quest.accommodation.minimumQuality}* or better ${quest.accommodation.type}. Separate each day with a double new line.`
 		);
 		console.log('Itinerary Request', itineraryRequest);
 

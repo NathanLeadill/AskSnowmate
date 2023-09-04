@@ -18,7 +18,7 @@
 	const questInformationTitles = ['Location', 'Weather', 'Cost of Living', 'Languages'];
 
 	const questInformationPrompts = [
-		`Give me a 25 word description of what ${quest.country} is known for, for a visitor`,
+		`Give me a 25 word description of what ${quest.country} is known for, for a visitor, end the response with 2 -'s'`,
 		`Give me a 30 word description of the average weather in ${
 			quest.country
 		} during the period from ${new Date(quest.departureDate).toLocaleDateString('en-US', {
@@ -27,15 +27,19 @@
 		})} to ${new Date(quest.returnDate).toLocaleDateString('en-US', {
 			month: 'short',
 			day: 'numeric'
-		})}`,
-		`Tell me the price of a cup of coffee in ${quest.country} as of your last Update in 5 words`,
-		`In 25 words tell me what languages are spoken in ${quest.country}`
+		})}, end the response with 2 -'s'`,
+		`Tell me the price of a cup of coffee in ${quest.country} as of your last Update in 5 words, end the response with 2 -'s'`,
+		`In 25 words tell me what languages are spoken in ${quest.country}, end the response with 2 -'s'`
 	];
 
 	async function runPrompts() {
-		const test = await makeOpenAIRequest(questInformationPrompts.join(' and then, '));
+		const test = await makeOpenAIRequest(questInformationPrompts.join(' and then, ') + ' After ');
 		if (test) {
-			infoBoxData = test?.split('\n').filter((item) => item !== '');
+			console.log('TEST', test);
+
+			infoBoxData = test?.split('--').filter((item) => item !== '');
+			console.log('INFOBOX', infoBoxData);
+
 			selectedPrompt = infoBoxData[0];
 			selectedTitle = questInformationTitles[0];
 		}
