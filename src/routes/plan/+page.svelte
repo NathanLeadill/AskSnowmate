@@ -48,7 +48,7 @@
 			showClass: { backdrop: 'swal2-noanimation' }
 		});
 		questStore.update((store) => {
-			store.lengthOfStay = lengthOfStay;
+			store.lengthOfStay = Number(lengthOfStay) + 1;
 			return store;
 		});
 
@@ -100,16 +100,14 @@
 	$: console.log(departureDate, 'DEPARURE DATE');
 
 	$: if (departureDate < returnDate) {
-		console.log('Departure date is before return date');
-	} else {
 		questStore.update((store) => {
 			store.returnDate = returnDate;
 			store.departureDate = departureDate;
 			return store;
 		});
+	} else {
+		console.log('Departure date is before return date');
 	}
-
-	$: console.log('QUEST STORE', $questStore);
 </script>
 
 <div class="travel-container">

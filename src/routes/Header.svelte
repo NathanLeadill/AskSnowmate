@@ -1,4 +1,5 @@
 <script>
+	export let data;
 </script>
 
 <header>
@@ -18,12 +19,16 @@
 			</a>
 		</nav>
 		<div class="user-section">
-			<a class="item dim" href="/login">
-				<span>Log in</span>
-			</a>
-			<a class="item dim" href="/signup">
-				<span>Sign up</span>
-			</a>
+			{#if data.user && data.user.name}
+				<p>{data.user.name}</p>
+			{:else}
+				<a class="item dim" href="/login">
+					<span>Log in</span>
+				</a>
+				<a class="item dim" href="/signup">
+					<span>Sign up</span>
+				</a>
+			{/if}
 		</div>
 		<!-- Create a dropdown -->
 		<!-- <div class="dropdown">

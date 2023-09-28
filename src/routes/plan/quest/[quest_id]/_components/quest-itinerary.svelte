@@ -1,23 +1,39 @@
 <script lang="ts">
 	import type { Quest } from '$lib/models/quests';
 	import { makeOpenAIRequest } from '$lib/openai/prompt';
+	import { questStore } from '$lib/stores';
 	import { onMount } from 'svelte';
 	export let quest: Quest;
 
-	let itinerary: string[] = [];
+	let itinerary: string[][] = [];
 
 	async function fetchItinerary() {
-		console.log('TEST', quest);
+		itinerary = new String($questStore.itinerary)
+			?.split('...')
+			.map((item: string) => item.split('\n').filter((item: string) => item !== ''))
+			.filter((el) => el.length > 2);
+		return itinerary;
+	}
 
-		const itineraryRequest = await makeOpenAIRequest(
-			`Plan me a ${quest.lengthOfStay} day itinerary for a journey to ${quest.country}. This journey is for ${quest.groupSize} people, we want to stay in a ${quest.accommodation.minimumQuality}* or better ${quest.accommodation.type}. Separate each day with a double new line.`
+	async function fetchItineraryLive() {
+		const { choices } = await makeOpenAIRequest(
+			`Plan me a ${quest.lengthOfStay} day trip to ${quest.country}, the trip will start on ${quest.departureDate} and will last until ${quest.returnDate}. We would like to stay in a ${quest.accommodation.minimumQuality}* ${quest.accommodation.type}. Please find me activities like museums and galleries to visit. After each entry please provide the link to their website in double square brackets, do this for the hotel too. Ensure at the end of each days list of activities you display 3 full stops.`,
+			'4',
+			[],
+			0
 		);
-		console.log('Itinerary Request', itineraryRequest);
 
-		itinerary = itineraryRequest
-			?.split('\n\n')
-			.filter((item) => item !== '')
-			.map((item) => item.split('\n'));
+		const message: string = choices[0].message.content;
+
+		itinerary = message
+			?.split('...')
+			.filter((item: string) => item !== '')
+			.map((item: string) => item.split('\n'));
+
+		questStore.update((store) => {
+			store.itinerary = itinerary;
+			return store;
+		});
 	}
 
 	onMount(() => {
@@ -26,9 +42,15 @@
 		fetchItinerary();
 	});
 
-	const test = ['Day 1', 'Visit the Eiffel Tower', 'Visit the Louvre', 'Visit the Arc de Triomphe'];
-	// console log each item from the above array except the first one
-	console.log(test.slice(1));
+	function createLink(link: string) {
+		const linkString = link.match(/\[\[(.*?)\]\]/);
+		if (linkString) {
+			return link.replace(
+				/\[\[(.*?)\]\]/g,
+				`<a href="${linkString[1]}" target="_blank">Book Now</a>`
+			);
+		} else return link;
+	}
 </script>
 
 <div class="itinerary">
@@ -36,9 +58,12 @@
 		<div class="day">
 			<h4 class="itinerary-day--label">{day[0]}</h4>
 			{#each day.slice(1) as items}
-				<p class="itinerary-day--item">{items}</p>
+				{#if items.includes('[[')}
+					<p class="itinerary-day--item itinerary-day--link">{@html createLink(items)}</p>
+				{:else}
+					<p class="itinerary-day--item">{items}</p>
+				{/if}
 			{/each}
-			<!-- {JSON.stringify(day, null, 2)} -->
 		</div>
 	{/each}
 </div>
@@ -66,5 +91,13 @@
 		font-size: 16px;
 		font-weight: 400;
 		margin: 10px auto;
+	}
+
+	:global(a) {
+		color: #4fa7f4;
+		text-decoration: none;
+		font-weight: 600;
+		font-size: 0.8rem;
+		letter-spacing: 0.06rem;
 	}
 </style>

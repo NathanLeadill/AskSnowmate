@@ -1,9 +1,19 @@
-<script lang="ts">
-	let dateString: string;
+<script>
+	let data;
+
+	async function fetchActivities() {
+		const res = await fetch('/api/activities', {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		});
+		data = await res.json();
+	}
 </script>
 
-<label>
-	<input type="date" bind:value={dateString} />
-</label>
+<button on:click={fetchActivities}>Fetch Activities</button>
 
-{dateString}
+<pre>
+	{JSON.stringify(data, null, 2)}
+</pre>

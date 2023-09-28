@@ -16,6 +16,10 @@
 	color: var(--color-text);
 }
 
+.hide {
+	display: none;
+}
+
 body {
 	min-height: 100vh;
 	margin: 0;
@@ -33,7 +37,7 @@ p {
 }
 
 a {
-	color: var(--color-theme-1);
+	color: #4fa7f4;
 	text-decoration: none;
 }
 

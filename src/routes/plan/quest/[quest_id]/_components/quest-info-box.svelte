@@ -2,6 +2,7 @@
 	import Spinner from '$lib/components/spinner.svelte';
 	import type { Quest } from '$lib/models/quests';
 	import { makeOpenAIRequest } from '$lib/openai/prompt';
+	import { questStore } from '$lib/stores';
 	import { onMount } from 'svelte';
 
 	import FaCloudMeatball from 'svelte-icons/fa/FaCloudMeatball.svelte';
@@ -12,7 +13,7 @@
 	export let quest: Quest;
 
 	let infoBoxData: string[] = [];
-	let selectedPrompt = 0;
+	let selectedPrompt: string;
 	let selectedTitle = '';
 
 	const questInformationTitles = ['Location', 'Weather', 'Cost of Living', 'Languages'];
@@ -33,15 +34,21 @@
 	];
 
 	async function runPrompts() {
-		const test = await makeOpenAIRequest(questInformationPrompts.join(' and then, ') + ' After ');
-		if (test) {
-			console.log('TEST', test);
+		const response = await makeOpenAIRequest(
+			questInformationPrompts.join(' and then, ') + ' After '
+		);
 
-			infoBoxData = test?.split('--').filter((item) => item !== '');
-			console.log('INFOBOX', infoBoxData);
-
-			selectedPrompt = infoBoxData[0];
-			selectedTitle = questInformationTitles[0];
+		if (response.choices.length > 0) {
+			const message = response.choices[0].message.content;
+			infoBoxData = message?.split('--').filter((item: string) => item !== '');
+			if (infoBoxData[0] && questInformationTitles[0]) {
+				selectedPrompt = infoBoxData[0];
+				selectedTitle = questInformationTitles[0];
+				questStore.update((store) => {
+					store.response = infoBoxData;
+					return store;
+				});
+			}
 		}
 	}
 

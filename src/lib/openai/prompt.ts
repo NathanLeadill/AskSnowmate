@@ -1,42 +1,34 @@
-import { Configuration, OpenAIApi } from 'openai';
-import { PUBLIC_OPENAI_API_KEY } from '$env/static/public';
+import type { Message } from '$lib/models/openai';
 
-function createOpenAIConfiguration() {
-	const configuration = new Configuration({
-		organization: 'org-xCLPnAZdhBauG0ecnIbHm7vF',
-		apiKey: PUBLIC_OPENAI_API_KEY
-	});
-	const openai = new OpenAIApi(configuration);
-	return openai;
-}
-
-async function promptOpenAI(openAiConfig: OpenAIApi, prompt: string) {
-	const completion = await openAiConfig.createChatCompletion({
-		model: 'gpt-3.5-turbo',
-		messages: [
-			{
-				role: 'assistant',
-				content: 'Hello, how are you?'
-			},
-			{
-				role: 'user',
-				content: prompt
+export async function makeOpenAIRequest(
+	prompt: string,
+	model = '3.5-turbo',
+	messages: Message[] = [],
+	temperature = 0.8,
+	frequency_penalty = 0.5,
+	presence_penalty = 0.0,
+	top_p = 1.0
+) {
+	const openAi = await fetch('/api/prompt', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({
+			prompt,
+			model,
+			messages,
+			options: {
+				temperature,
+				frequency_penalty,
+				presence_penalty,
+				top_p
 			}
-		],
-		max_tokens: 516,
-		temperature: 0.8,
-		top_p: 1.0,
-		frequency_penalty: 0.5,
-		presence_penalty: 0.0
+		})
 	});
 
-	const {
-		data: { choices }
-	} = completion;
-	return choices[0].message.content;
-}
+	const openAiResponse = await openAi.json();
+	console.log(openAiResponse, 'openAiResponse');
 
-export async function makeOpenAIRequest(prompt: string) {
-	const openAiConfig = createOpenAIConfiguration();
-	return await promptOpenAI(openAiConfig, prompt);
+	return openAiResponse;
 }

@@ -12,3 +12,10 @@ export const quests = [
 		}
 	}
 ];
+
+export const usersDB = [
+	{
+		email: 'test@email.com',
+		password: 'password'
+	}
+];
